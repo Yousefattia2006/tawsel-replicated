@@ -32,7 +32,7 @@ const defaultCenter = { lat: 30.0444, lng: 31.2357 };
 
 export function MapPicker({ open, onClose, onConfirm, title, confirmLabel, initialCenter }: MapPickerProps) {
   const { t } = useLanguage();
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyDhU698IckehEkiI8z7MXKJpw6VtlmqCPE';
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey: apiKey, libraries: LIBRARIES as any });
 
   const mapRef = useRef<google.maps.Map | null>(null);
