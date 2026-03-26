@@ -20,12 +20,12 @@ interface Notification {
 }
 
 export default function Notifications() {
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
-  const isRTL = language === 'ar';
+  const isRTL = lang === 'ar';
 
   useEffect(() => {
     if (!user) return;
