@@ -47,7 +47,7 @@ export function GoogleMapView({
   onCurrentLocation,
   routePath,
 }: GoogleMapProps) {
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyDhU698IckehEkiI8z7MXKJpw6VtlmqCPE';
   const { t } = useLanguage();
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: apiKey,
