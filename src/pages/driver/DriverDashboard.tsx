@@ -12,7 +12,7 @@ import { CancellationDialog } from '@/components/CancellationDialog';
 import { ReportDialog } from '@/components/ReportDialog';
 import { Button } from '@/components/ui/button';
 import { sendOrderStatusNotification } from '@/hooks/useNotifications';
-import { MapPin, Bike, Wallet, Package, Star, Lock, Phone, Flag, XCircle, Camera } from 'lucide-react';
+import { MapPin, Bike, Wallet, Package, Star, Lock, Phone, Flag, XCircle, Camera, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -407,6 +407,30 @@ export default function DriverDashboard() {
                 )}
                 <ChatSheet deliveryId={activeDelivery.id} otherUserName={storeProfile.store_name} />
               </div>
+            )}
+
+            {/* Navigate to Store (before pickup) */}
+            {['driver_accepted', 'arriving_pickup'].includes(activeDelivery.status) && activeDelivery.pickup_lat && activeDelivery.pickup_lng && (
+              <Button
+                variant="outline"
+                className="w-full h-12 font-bold rounded-xl gap-2 border-accent text-accent hover:bg-accent/10"
+                onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${activeDelivery.pickup_lat},${activeDelivery.pickup_lng}&travelmode=driving`, '_blank')}
+              >
+                <Navigation className="w-4 h-4" />
+                {t.driver.navigateToStore}
+              </Button>
+            )}
+
+            {/* Navigate to Customer (after pickup) */}
+            {['picked_up', 'en_route'].includes(activeDelivery.status) && activeDelivery.dropoff_lat && activeDelivery.dropoff_lng && (
+              <Button
+                variant="outline"
+                className="w-full h-12 font-bold rounded-xl gap-2 border-primary text-primary hover:bg-primary/10"
+                onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${activeDelivery.dropoff_lat},${activeDelivery.dropoff_lng}&travelmode=driving`, '_blank')}
+              >
+                <Navigation className="w-4 h-4" />
+                {t.driver.navigateToCustomer}
+              </Button>
             )}
 
             {/* Proof of delivery photo - only when en_route */}
