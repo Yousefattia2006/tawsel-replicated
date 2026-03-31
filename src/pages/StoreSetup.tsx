@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight, Loader2, Store } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function StoreSetup() {
   const { t, dir } = useLanguage();
