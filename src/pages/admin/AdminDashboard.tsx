@@ -201,6 +201,7 @@ export default function AdminDashboard() {
   }
 
   return (
+    <div className="min-h-screen bg-background safe-top">
       <div className="px-5 pt-6 pb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t.admin.dashboard}</h1>
         <div className="flex items-center gap-2">
