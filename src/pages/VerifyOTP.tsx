@@ -77,6 +77,11 @@ export default function VerifyOTP() {
 
       toast.success(t.verify.success);
 
+      // Re-sign in so the session is active for subsequent pages
+      if (email && password) {
+        await supabase.auth.signInWithPassword({ email, password });
+      }
+
       // Navigate based on role
       if (role === 'store') {
         navigate('/store', { replace: true });
