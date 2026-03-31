@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight, Loader2, Store } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function StoreSetup() {
   const { t, dir } = useLanguage();
@@ -27,14 +28,19 @@ export default function StoreSetup() {
     setLoading(true);
     try {
       const data = await signUp(email, password, storeName, phone, 'store');
-      if (data.user && data.session) {
-        localStorage.setItem('wasaly_onboarded', 'true');
-        toast.success(t.common.success);
-        navigate('/store', { replace: true });
-      } else {
-        toast.success(t.auth.checkEmail);
-        navigate('/auth', { replace: true });
+      const userId = data.user?.id;
+      if (!userId) throw new Error('Signup failed');
+
+      // Send OTP before navigating
+      const { data: otpData, error: otpError } = await supabase.functions.invoke('send-otp', {
+        body: { action: 'send', user_id: userId, email },
+      });
+      if (otpError || otpData?.error) {
+        console.warn('send-otp issue:', otpError || otpData?.error);
       }
+
+      await supabase.auth.signOut().catch(() => {});
+      navigate('/verify', { state: { email, userId, role: 'store' } });
     } catch (err: any) {
       toast.error(err.message || t.common.error);
     } finally {
