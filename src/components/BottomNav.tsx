@@ -47,7 +47,6 @@ export const storeNavItems: NavItem[] = [
   { path: '/store', icon: Home, labelKey: 'home' },
   { path: '/store/deliveries', icon: Package, labelKey: 'deliveries' },
   { path: '/notifications', icon: Bell, labelKey: 'notifications' },
-  { path: '/messages', icon: MessageCircle, labelKey: 'messages' },
   { path: '/store/settings', icon: Settings, labelKey: 'settings' },
 ];
 
