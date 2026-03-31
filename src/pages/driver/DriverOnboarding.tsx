@@ -84,10 +84,19 @@ export default function DriverOnboarding() {
   };
 
   const handleSubmit = async () => {
-    if (!user) return;
     setSubmitting(true);
     try {
-      const uid = user.id;
+      // Try hook user first, fallback to fresh session check
+      let uid = user?.id;
+      if (!uid) {
+        const { data: { session } } = await supabase.auth.getSession();
+        uid = session?.user?.id;
+      }
+      if (!uid) {
+        toast.error('Session expired. Please log in again.');
+        navigate('/auth', { replace: true });
+        return;
+      }
       const uploads: Record<string, string | null> = {};
       const fileMap: [keyof FormData, string][] = [
         ['national_id_front', `${uid}/national_id_front`],
