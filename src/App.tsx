@@ -77,6 +77,7 @@ const App = () => (
             {/* Notifications */}
             <Route path="/notifications" element={<Notifications />} />
             {/* Admin routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminDashboard />} />
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
