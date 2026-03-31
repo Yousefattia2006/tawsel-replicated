@@ -118,6 +118,11 @@ export function useAuth() {
     if (error) throw error;
     if (!data.user) throw new Error('Signup failed');
 
+    // Supabase returns empty identities when email already exists (to prevent enumeration)
+    if (!data.user.identities || data.user.identities.length === 0) {
+      throw new Error('This email is already registered. Please log in instead.');
+    }
+
     const userId = data.user.id;
 
     // Fire-and-forget so signup flow isn't blocked when email verification returns no session.
