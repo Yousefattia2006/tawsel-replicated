@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Package, Settings, Wallet, MessageCircle, Bell } from 'lucide-react';
+import { Home, Package, Settings, Wallet, Bell } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { cn } from '@/lib/utils';
 
