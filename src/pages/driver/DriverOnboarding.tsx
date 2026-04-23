@@ -184,6 +184,7 @@ export default function DriverOnboarding() {
       }).eq('user_id', uid);
 
       if (error) throw error;
+      submittedRef.current = true;
       toast.success(t.driverOnboarding?.submitted || 'Application submitted!');
       navigate('/driver/status', { replace: true });
     } catch (err: any) {
