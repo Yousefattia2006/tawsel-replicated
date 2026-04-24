@@ -6,3 +6,6 @@ verify_jwt = false
 
 [functions.delete-incomplete-driver]
 verify_jwt = false
+
+[functions.dispatch-broadcasts]
+verify_jwt = false
