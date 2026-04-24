@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Users, Package, TrendingUp, Clock, LogOut, CheckCircle, XCircle, Ban, Wallet, Star, FileText, DollarSign, Eye, ChevronDown, ChevronUp, BarChart3, AlertTriangle, MapPin } from 'lucide-react';
+import AdminBroadcasts from './AdminBroadcasts';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
@@ -18,7 +19,7 @@ export default function AdminDashboard() {
   const { t } = useLanguage();
   const { user, role, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<'overview' | 'applications' | 'drivers' | 'deliveries' | 'stores' | 'analytics' | 'reports' | 'cancellations'>('overview');
+  const [tab, setTab] = useState<'overview' | 'applications' | 'drivers' | 'deliveries' | 'stores' | 'analytics' | 'reports' | 'cancellations' | 'broadcasts'>('overview');
   const [drivers, setDrivers] = useState<any[]>([]);
   const [deliveries, setDeliveries] = useState<any[]>([]);
   const [stores, setStores] = useState<any[]>([]);
@@ -190,6 +191,7 @@ export default function AdminDashboard() {
     { key: 'analytics', label: 'Analytics' },
     { key: 'reports', label: 'Reports' },
     { key: 'cancellations', label: 'Cancellations' },
+    { key: 'broadcasts', label: 'Broadcasts' },
   ] as const;
 
   if (authLoading || role !== 'admin') {
@@ -603,6 +605,9 @@ export default function AdminDashboard() {
             ))}
           </div>
         )}
+
+        {/* BROADCASTS TAB */}
+        {tab === 'broadcasts' && <AdminBroadcasts />}
       </div>
     </div>
   );
