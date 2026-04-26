@@ -29,69 +29,86 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
 
   const routeAfterAuth = async (userId: string, fallbackRole?: "store" | "driver") => {
-    // Determine role
     let resolvedRole: "store" | "driver" | "admin" | null = null;
+
     for (const candidate of ["admin", "driver", "store"] as const) {
-      const { data } = await supabase.rpc("has_role", { _user_id: userId, _role: candidate });
+      const { data } = await supabase.rpc("has_role", {
+        _user_id: userId,
+        _role: candidate,
+      });
+
       if (data) {
         resolvedRole = candidate;
         break;
       }
     }
+
     if (!resolvedRole && fallbackRole) resolvedRole = fallbackRole;
 
     if (resolvedRole === "admin") return navigate("/admin", { replace: true });
     if (resolvedRole === "store") return navigate("/store", { replace: true });
+
     if (resolvedRole === "driver") {
       const { data: profile } = await supabase
         .from("driver_profiles")
         .select("onboarding_completed, approval_status")
         .eq("user_id", userId)
         .maybeSingle();
+
       if (!profile || !profile.onboarding_completed) {
         return navigate("/driver/onboarding", { replace: true });
       }
+
       if (profile.approval_status === "pending" || profile.approval_status === "rejected") {
         return navigate("/driver/status", { replace: true });
       }
+
       return navigate("/driver", { replace: true });
     }
+
     navigate("/", { replace: true });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (loading) return;
     setLoading(true);
+
     try {
       if (mode === "login") {
         const data = await signIn(email.trim(), password);
         const userId = data.user?.id;
+
         if (!userId) throw new Error("Login failed");
+
         toast.success("Welcome back!");
         await routeAfterAuth(userId);
       } else {
-        // Basic validation
         if (!fullName.trim()) throw new Error("Please enter your full name");
         if (!phone.trim()) throw new Error("Please enter your phone number");
         if (password.length < 6) throw new Error("Password must be at least 6 characters");
 
         try {
           const data = await signUp(email.trim(), password, fullName.trim(), phone.trim(), selectedRole);
+
           const userId = data.user?.id;
+
           if (!userId) throw new Error("Signup failed — please try again.");
 
           toast.success("Account created!");
-          // Give the background profile/role inserts a brief moment to land
+
           await new Promise((r) => setTimeout(r, 600));
           await routeAfterAuth(userId, selectedRole);
         } catch (signupErr: any) {
           const msg = (signupErr?.message || "").toLowerCase();
+
           if (msg.includes("already registered") || msg.includes("already exists") || msg.includes("user already")) {
             toast.error("This email is already registered. Please sign in instead.");
             setMode("login");
             return;
           }
+
           throw signupErr;
         }
       }
@@ -105,11 +122,8 @@ export default function Auth() {
   };
 
   return (
-    <div
-      className={cn("min-h-[100dvh] bg-background flex flex-col safe-area", isRTL && "rtl")}
-      dir={isRTL ? "rtl" : "ltr"}
-    >
-      <div className="flex items-center justify-between px-4 pt-[calc(env(safe-area-inset-top)+1rem)]">
+    <div className={cn("min-h-[100dvh] bg-background flex flex-col", isRTL && "rtl")} dir={isRTL ? "rtl" : "ltr"}>
+      <div className="flex items-center justify-between px-4 pt-20">
         <LanguageToggle />
         <h1 className="text-lg font-bold text-foreground font-['Inter']">Tawseel</h1>
         <div className="w-10" />
@@ -167,6 +181,7 @@ export default function Auth() {
                       className="h-12 rounded-xl bg-secondary border-0 text-base"
                     />
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="phone" className="text-sm font-medium">
                       {t.auth.phone}
@@ -182,8 +197,10 @@ export default function Auth() {
                       className="h-12 rounded-xl bg-secondary border-0 text-base"
                     />
                   </div>
+
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">{t.auth.selectRole}</Label>
+
                     <div className="flex gap-3">
                       {[
                         { value: "store" as const, label: t.auth.store, icon: Store },
@@ -225,6 +242,7 @@ export default function Auth() {
                 className="h-12 rounded-xl bg-secondary border-0 text-base"
               />
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">
                 {t.auth.password}
